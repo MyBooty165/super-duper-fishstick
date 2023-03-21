@@ -1,50 +1,51 @@
-body {
-  font-family: Arial, sans-serif;
+let result = document.getElementById("result");
+
+function append(value) {
+  if (result.value === "0" && value !== ".") {
+    result.value = value;
+  } else {
+    result.value += value;
+  }
 }
 
-.calculator {
-  width: 270px;
-  margin: auto;
-  background-color: #f2f2f2;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0px 3px 6px rgba(0,0,0,0.2);
-  padding: 10px;
+function clearDisplay() {
+  result.value = "0";
 }
 
-.display {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  padding: 10px;
+function backspace() {
+  result.value = result.value.slice(0, -1);
+  if (result.value === "") {
+    result.value = "0";
+  }
 }
 
-.display input {
-  width: 100%;
-  border: none;
-  font-size: 36px;
-  text-align: right;
+function calculate() {
+  try {
+    result.value = eval(result.value);
+  } catch (e) {
+    result.value = "Error";
+  }
 }
 
-.buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 5px;
-}
+// Add event listeners for keyboard support
+document.addEventListener("keydown", function(event) {
+  // Clear display on "C" or "Delete" key
+  if (event.key === "c" || event.key === "C" || event.key === "Delete") {
+    clearDisplay();
+  }
 
-button {
-  font-size: 24px;
-  border-radius: 50%;
-  border: none;
-  background-color: #e0e0e0;
-  color: #666;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  outline: none;
-  padding: 20px;
-}
+  // Backspace on "Backspace" key
+  if (event.key === "Backspace") {
+    backspace();
+  }
 
-button:hover {
-  background-color: #ccc;
-}
+  // Calculate on "Enter" or "=" key
+  if (event.key === "Enter" || event.key === "=") {
+    calculate();
+  }
+
+  // Append digits and operators
+  if (/[0-9+\-*/.]/.test(event.key)) {
+    append(event.key);
+  }
+});
